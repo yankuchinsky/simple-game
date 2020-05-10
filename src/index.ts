@@ -6,6 +6,7 @@ import {
   PlayerCarContainer,
   DependencyContainer,
 } from "./helpers/dependencyContainer";
+import { ScoreController } from "./helpers/scoreController";
 
 enum keyCodes {
   up = 38,
@@ -38,6 +39,10 @@ const Bootstrap = () => {
   KeyDetectionHelper.init(window);
 
   const enemyController = new EnemyController(context);
+
+  const scoreController = new ScoreController(context);
+
+  scoreController.setPosition({ x: WIDTH - 200, y: 40 });
 
   const car = new Car(context);
 
@@ -72,6 +77,8 @@ const Bootstrap = () => {
     car.draw();
 
     enemyController.draw();
+    scoreController.draw();
+
     requestAnimationFrame(draw);
   };
 

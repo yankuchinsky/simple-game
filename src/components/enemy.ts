@@ -1,4 +1,5 @@
 import { RectGameObject } from "./rectGameObject";
+import { PlayerController } from "../helpers/playerController";
 import { PlayerCarContainer } from "../helpers/dependencyContainer";
 
 export class Enemy extends RectGameObject {
@@ -16,13 +17,14 @@ export class Enemy extends RectGameObject {
     const playerBoundaries = playerCar.getBoundaries();
 
     const isHeightIntersection = playerBoundaries.y <= y + height;
+    let result = false;
 
     if (
       x + width > playerBoundaries.x - 5 &&
       x + width < playerBoundaries.x + playerBoundaries.width &&
       isHeightIntersection
     ) {
-      return true;
+      result = true;
     }
 
     if (
@@ -30,9 +32,13 @@ export class Enemy extends RectGameObject {
       x > playerBoundaries.x &&
       isHeightIntersection
     ) {
-      return true;
+      result = true;
     }
 
-    return false;
+    if (result) {
+      PlayerController.informAboutCollision();
+    }
+
+    return result;
   }
 }
