@@ -19,8 +19,8 @@ export class ScoreController extends RectGameObject {
   }
 
   draw() {
-    const { field, width, height, x, y, score } = this;
-    this._draw();
+    const { field, height, x, y, score } = this;
+    field.fillStyle = "#ffffff";
 
     field.font = "20px sans-serif";
 

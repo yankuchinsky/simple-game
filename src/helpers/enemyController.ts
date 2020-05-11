@@ -36,7 +36,7 @@ export class EnemyController {
   protected createEnemy() {
     this.createInterval += 1;
 
-    if (this.createInterval !== 10) {
+    if (this.createInterval !== 14) {
       return;
     }
 

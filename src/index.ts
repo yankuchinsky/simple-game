@@ -1,22 +1,13 @@
-import { Car } from "./components/car";
 import { KeyDetectionHelper } from "./helpers/keyDetection";
 import { EnemyController } from "./helpers/enemyController";
 import { GameFieldController } from "./helpers/gameFieldController";
-import {
-  PlayerCarContainer,
-  DependencyContainer,
-} from "./helpers/dependencyContainer";
 import { ScoreController } from "./helpers/scoreController";
+import { PlayerController } from "./helpers/playerController";
+import { NotificationController } from "./helpers/notificationController";
+import RoadImage from "./assets/road.png";
 
-enum keyCodes {
-  up = 38,
-  down = 40,
-  left = 37,
-  right = 39,
-}
-
-const WIDTH = GameFieldController.getBoundaries().width;
-const HEIGHT = GameFieldController.getBoundaries().height;
+export const WIDTH = GameFieldController.getBoundaries().width;
+export const HEIGHT = GameFieldController.getBoundaries().height;
 
 const Bootstrap = () => {
   const field: HTMLCanvasElement | null = document.querySelector(
@@ -39,45 +30,42 @@ const Bootstrap = () => {
   KeyDetectionHelper.init(window);
 
   const enemyController = new EnemyController(context);
+  enemyController.start();
 
   const scoreController = new ScoreController(context);
-
   scoreController.setPosition({ x: WIDTH - 200, y: 40 });
 
-  const car = new Car(context);
+  PlayerController.init(context);
+  PlayerController.registerKeys();
 
-  PlayerCarContainer.setContainer(new DependencyContainer().setInstance(car));
+  const gameOverNotification = new NotificationController(context);
 
-  car.setPosition({ x: WIDTH / 2, y: HEIGHT / 1.5 });
+  const drawBackground = () => {
+    const image = new Image();
+    image.src = RoadImage;
+    const road = context.createPattern(image, "repeat");
 
-  KeyDetectionHelper.registerKey(keyCodes.up, car, "move", {
-    x: 0,
-    y: -5,
-  });
-
-  KeyDetectionHelper.registerKey(keyCodes.down, car, "move", {
-    x: 0,
-    y: 5,
-  });
-
-  KeyDetectionHelper.registerKey(keyCodes.right, car, "move", {
-    x: 5,
-    y: 0,
-  });
-
-  KeyDetectionHelper.registerKey(keyCodes.left, car, "move", {
-    x: -5,
-    y: 0,
-  });
-
-  enemyController.start();
+    if (road) {
+      context.fillStyle = road;
+      context.fillRect(0, 0, WIDTH, HEIGHT);
+    }
+  };
 
   const draw = () => {
     context.clearRect(0, 0, WIDTH, HEIGHT);
-    car.draw();
+
+    drawBackground();
+
+    PlayerController.draw();
 
     enemyController.draw();
     scoreController.draw();
+
+    if (PlayerController.isGameEnd) {
+      gameOverNotification.getNotification();
+
+      return;
+    }
 
     requestAnimationFrame(draw);
   };

@@ -11,6 +11,10 @@ export class KeyDetectionHelper {
     functionSignature: string,
     arg: any
   ) {
+    if (!this.window) {
+      return;
+    }
+
     this.window.addEventListener("keydown", (event) => {
       if (event.isComposing || event.keyCode === keyCode) {
         obj[functionSignature](arg);

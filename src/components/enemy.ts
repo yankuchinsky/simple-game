@@ -1,13 +1,14 @@
 import { RectGameObject } from "./rectGameObject";
 import { PlayerController } from "../helpers/playerController";
 import { PlayerCarContainer } from "../helpers/dependencyContainer";
+import CarImage from "../assets/car.png";
 
 export class Enemy extends RectGameObject {
   protected x = 0;
   protected y = 0;
 
-  width = 30;
-  height = 70;
+  width = 46;
+  height = 100;
 
   carCollisionDetected() {
     const { x, y, width, height } = this;
@@ -20,7 +21,7 @@ export class Enemy extends RectGameObject {
     let result = false;
 
     if (
-      x + width > playerBoundaries.x - 5 &&
+      x + width > playerBoundaries.x &&
       x + width < playerBoundaries.x + playerBoundaries.width &&
       isHeightIntersection
     ) {
@@ -28,7 +29,7 @@ export class Enemy extends RectGameObject {
     }
 
     if (
-      x < playerBoundaries.x + playerBoundaries.width + 5 &&
+      x < playerBoundaries.x + playerBoundaries.width &&
       x > playerBoundaries.x &&
       isHeightIntersection
     ) {
@@ -40,5 +41,14 @@ export class Enemy extends RectGameObject {
     }
 
     return result;
+  }
+
+  draw() {
+    const { field, x, y, width, height } = this;
+
+    const image = new Image();
+    image.src = CarImage;
+
+    field.drawImage(image, x, y, width, height);
   }
 }

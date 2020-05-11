@@ -14,6 +14,10 @@ const baseConfig = {
         use: "ts-loader",
         exclude: /node_modules/,
       },
+      {
+        test: /\.png$/,
+        use: "file-loader",
+      },
     ],
   },
 };
